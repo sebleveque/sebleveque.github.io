@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Genbank data map</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/symb_map_test_1.js"></script>
+        <script src="data/orbicella_map_test_2.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_satellite_0');
+        map.getPane('pane_satellite_0').style.zIndex = 400;
+        var layer_satellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_satellite_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_satellite_0;
+        map.addLayer(layer_satellite_0);
+        function pop_symb_map_test_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Database</th>\
+                        <td>' + (feature.properties['Database'] !== null ? autolinker.link(feature.properties['Database'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Accession.num</th>\
+                        <td>' + (feature.properties['Accession.num'] !== null ? autolinker.link(feature.properties['Accession.num'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">family</th>\
+                        <td>' + (feature.properties['family'] !== null ? autolinker.link(feature.properties['family'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">clade</th>\
+                        <td>' + (feature.properties['clade'] !== null ? autolinker.link(feature.properties['clade'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">subclade</th>\
+                        <td>' + (feature.properties['subclade'] !== null ? autolinker.link(feature.properties['subclade'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Region</th>\
+                        <td>' + (feature.properties['Region'] !== null ? autolinker.link(feature.properties['Region'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Locality</th>\
+                        <td>' + (feature.properties['Locality'] !== null ? autolinker.link(feature.properties['Locality'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Site</th>\
+                        <td>' + (feature.properties['Site'] !== null ? autolinker.link(feature.properties['Site'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sub-site</th>\
+                        <td>' + (feature.properties['Sub-site'] !== null ? autolinker.link(feature.properties['Sub-site'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location unprecise</th>\
+                        <td>' + (feature.properties['Location unprecise'] !== null ? autolinker.link(feature.properties['Location unprecise'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">lat</th>\
+                        <td>' + (feature.properties['lat'] !== null ? autolinker.link(feature.properties['lat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">long</th>\
+                        <td>' + (feature.properties['long'] !== null ? autolinker.link(feature.properties['long'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Collection Date</th>\
+                        <td>' + (feature.properties['Collection Date'] !== null ? autolinker.link(feature.properties['Collection Date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">collection date unprecise</th>\
+                        <td>' + (feature.properties['collection date unprecise'] !== null ? autolinker.link(feature.properties['collection date unprecise'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">year</th>\
+                        <td>' + (feature.properties['year'] !== null ? autolinker.link(feature.properties['year'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">months</th>\
+                        <td>' + (feature.properties['months'] !== null ? autolinker.link(feature.properties['months'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">data validated</th>\
+                        <td>' + (feature.properties['data validated'] !== null ? autolinker.link(feature.properties['data validated'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_symb_map_test_1_0(feature) {
+            switch(String(feature.properties['year'])) {
+                case '1995':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(245,245,117,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '1999':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,240,130,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2000':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(208,235,143,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2002':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(188,227,150,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2003':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(160,216,138,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2004':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,204,127,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2005':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(107,192,114,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2006':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(81,179,101,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2007':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(55,166,87,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2008':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(35,188,97,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2009':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(17,222,114,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2013':
+                    return {
+                pane: 'pane_symb_map_test_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,255,132,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_symb_map_test_1');
+        map.getPane('pane_symb_map_test_1').style.zIndex = 401;
+        map.getPane('pane_symb_map_test_1').style['mix-blend-mode'] = 'normal';
+        var layer_symb_map_test_1 = new L.geoJson(json_symb_map_test_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_symb_map_test_1',
+            layerName: 'layer_symb_map_test_1',
+            pane: 'pane_symb_map_test_1',
+            onEachFeature: pop_symb_map_test_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_symb_map_test_1_0(feature));
+            },
+        });
+        var cluster_symb_map_test_1 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_symb_map_test_1.addLayer(layer_symb_map_test_1);
+
+        bounds_group.addLayer(layer_symb_map_test_1);
+        cluster_symb_map_test_1.addTo(map);
+        function pop_orbicella_map_test_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Database</th>\
+                        <td>' + (feature.properties['Database'] !== null ? autolinker.link(feature.properties['Database'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Accession.num</th>\
+                        <td>' + (feature.properties['Accession.num'] !== null ? autolinker.link(feature.properties['Accession.num'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Species</th>\
+                        <td>' + (feature.properties['Species'] !== null ? autolinker.link(feature.properties['Species'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Region</th>\
+                        <td>' + (feature.properties['Region'] !== null ? autolinker.link(feature.properties['Region'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Locality</th>\
+                        <td>' + (feature.properties['Locality'] !== null ? autolinker.link(feature.properties['Locality'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Site</th>\
+                        <td>' + (feature.properties['Site'] !== null ? autolinker.link(feature.properties['Site'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Location unprecise</th>\
+                        <td>' + (feature.properties['Location unprecise'] !== null ? autolinker.link(feature.properties['Location unprecise'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">lat</th>\
+                        <td>' + (feature.properties['lat'] !== null ? autolinker.link(feature.properties['lat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">long</th>\
+                        <td>' + (feature.properties['long'] !== null ? autolinker.link(feature.properties['long'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Collection Date</th>\
+                        <td>' + (feature.properties['Collection Date'] !== null ? autolinker.link(feature.properties['Collection Date'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">collection date unprecise</th>\
+                        <td>' + (feature.properties['collection date unprecise'] !== null ? autolinker.link(feature.properties['collection date unprecise'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">year</th>\
+                        <td>' + (feature.properties['year'] !== null ? autolinker.link(feature.properties['year'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">months</th>\
+                        <td>' + (feature.properties['months'] !== null ? autolinker.link(feature.properties['months'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Publication DOI</th>\
+                        <td>' + (feature.properties['Publication DOI'] !== null ? autolinker.link(feature.properties['Publication DOI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Corresponding author</th>\
+                        <td>' + (feature.properties['Corresponding author'] !== null ? autolinker.link(feature.properties['Corresponding author'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Infos</th>\
+                        <td>' + (feature.properties['Infos'] !== null ? autolinker.link(feature.properties['Infos'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">data validated</th>\
+                        <td>' + (feature.properties['data validated'] !== null ? autolinker.link(feature.properties['data validated'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_orbicella_map_test_2_0(feature) {
+            switch(String(feature.properties['year'])) {
+                case '2001':
+                    return {
+                pane: 'pane_orbicella_map_test_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(194,181,216,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2004':
+                    return {
+                pane: 'pane_orbicella_map_test_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,67,159,1.0)',
+                interactive: true,
+            }
+                    break;
+                case '2011':
+                    return {
+                pane: 'pane_orbicella_map_test_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(95,0,42,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_orbicella_map_test_2');
+        map.getPane('pane_orbicella_map_test_2').style.zIndex = 402;
+        map.getPane('pane_orbicella_map_test_2').style['mix-blend-mode'] = 'normal';
+        var layer_orbicella_map_test_2 = new L.geoJson(json_orbicella_map_test_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_orbicella_map_test_2',
+            layerName: 'layer_orbicella_map_test_2',
+            pane: 'pane_orbicella_map_test_2',
+            onEachFeature: pop_orbicella_map_test_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_orbicella_map_test_2_0(feature));
+            },
+        });
+        var cluster_orbicella_map_test_2 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_orbicella_map_test_2.addLayer(layer_orbicella_map_test_2);
+
+        bounds_group.addLayer(layer_orbicella_map_test_2);
+        cluster_orbicella_map_test_2.addTo(map);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Genbank data map</h2>';
+            };
+            title.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'orbicella_map_test<br /><table><tr><td style="text-align: center;"><img src="legend/orbicella_map_test_2_20010.png" /></td><td>2001</td></tr><tr><td style="text-align: center;"><img src="legend/orbicella_map_test_2_20041.png" /></td><td>2004</td></tr><tr><td style="text-align: center;"><img src="legend/orbicella_map_test_2_20112.png" /></td><td>2011</td></tr></table>': cluster_orbicella_map_test_2,'symb_map_test<br /><table><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_19950.png" /></td><td>1995</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_19991.png" /></td><td>1999</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20002.png" /></td><td>2000</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20023.png" /></td><td>2002</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20034.png" /></td><td>2003</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20045.png" /></td><td>2004</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20056.png" /></td><td>2005</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20067.png" /></td><td>2006</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20078.png" /></td><td>2007</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_20089.png" /></td><td>2008</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_200910.png" /></td><td>2009</td></tr><tr><td style="text-align: center;"><img src="legend/symb_map_test_1_201311.png" /></td><td>2013</td></tr></table>': cluster_symb_map_test_1,"satellite": layer_satellite_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
